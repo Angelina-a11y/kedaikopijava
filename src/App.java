@@ -84,6 +84,43 @@ class Produk extends Datahandler {
 }
 
 // stok
+// nama, stok, tanggal masuk, tanggal kadaluarsa, kategori
+class Stok extends Datahandler{
+    private List<String[]> data;
+
+    public Stok(){
+        this.data = new ArrayList<>();
+    }
+
+    String nama, stok, tanggal_m, tanggal_k, kategori;
+
+    Scanner stokin = new Scanner(System.in);
+
+    public void create_data(){
+        System.out.print("Masukkan Nama Produk: ");
+        nama = stokin.nextLine();
+        System.out.print("Masukkan Kategori: ");
+        kategori = stokin.nextLine();
+        System.out.print("Masukkan Stok: ");
+        stok = stokin.nextLine();
+        System.out.print("Masukkan Tanggal masuk : ");
+        tanggal_m = stokin.nextLine();
+        System.out.print("Masukkan Tanggal kadaluarsa: ");
+        tanggal_k = stokin.nextLine();
+
+        String[] newStock = { nama, kategori ,stok, tanggal_m, tanggal_k };
+        data.add(newStock);
+        System.out.println("Data telah ditambahkan: " + String.join(", ", newStock));
+    }
+
+    public void view(){
+        System.out.println("Data saat ini: ");
+        for (int i = 0; i < data.size(); i++) {
+            String[] datum = data.get(i);
+            System.out.println("Data ke-" + (i + 1) + ": " + "Nama Produk: " + datum[0] + ", Harga: " + datum[1] + ", Distributor: " + datum[2]);
+        }
+    }
+}
 
 // penjualan
 
@@ -97,6 +134,10 @@ public class App {
     public static void main(String[] args) throws Exception {
         // pegawai
         Pegawai pegawai = new Pegawai(); 
+        // produk
+        Produk produk = new Produk();
+        // stok
+        Stok stok = new Stok();
 
 
         Scanner input = new Scanner(System.in);
@@ -148,12 +189,53 @@ public class App {
                     break;
                 case 2: 
                 // disini buat pilihan mau liat data atau buat data produk
+                    do {
+                        System.out.println("1. Tambah Data Produk");
+                        System.out.println("2. Lihat Data Produk");
+                        System.out.print("Masukkan Pilihan: ");
+                        choice = input.nextInt();
+                        input.nextLine();
+
+                        switch (choice) {
+                            case 1:
+                                produk.create_data();
+                                break;
+                            case 2:
+                                produk.view();
+                                break;
+                            default:
+                                System.out.println("Pilihan tidak valid.");
+                                break;
+                        } 
+                        System.out.print("Apakah ingin kembali ke menu produk? (y/n): ");
+                        kembali = input.nextLine();
+                    } while(kembali.equalsIgnoreCase("y"));
 
                     break;
                 
                 case 3:
                 // disini buat pilihan mau liat data atau buat data stok
+                do {
+                    System.out.println("1. Tambah Data Stok");
+                    System.out.println("2. Lihat Data Stok");
+                    System.out.print("Masukkan Pilihan: ");
+                    choice = input.nextInt();
+                    input.nextLine();
 
+                    switch (choice) {
+                        case 1:
+                            stok.create_data();
+                            break;
+                        case 2:
+                            stok.view();
+                            break;
+                        default:
+                            System.out.println("Pilihan tidak valid.");
+                            break;
+                    } 
+                    System.out.print("Apakah ingin kembali ke menu stok? (y/n): ");
+                    kembali = input.nextLine();
+                } while(kembali.equalsIgnoreCase("y"));
                     break;
 
                 case 4: 
