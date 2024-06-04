@@ -48,6 +48,40 @@ class Pegawai extends Datahandler {
 }
 
 // produk
+class Produk extends Datahandler {
+    private List<String[]> data;
+
+    public Produk() {
+        this.data = new ArrayList<>();
+    }
+
+    String namaProduk, harga, distributor;
+
+    Scanner produk = new Scanner(System.in);
+
+    // method ini buat data 
+    public void create_data() {
+        System.out.print("Masukkan Nama Produk: ");
+        namaProduk = produk.nextLine();
+        System.out.print("Masukkan Harga: ");
+        harga = produk.nextLine();
+        System.out.print("Masukkan Distributor: ");
+        distributor = produk.nextLine();
+
+        String[] newProduk = { namaProduk, harga, distributor };
+        data.add(newProduk);
+        System.out.println("Data telah ditambahkan: " + String.join(", ", newProduk));
+    }
+
+    // setelah disimpan di arraylist tampilkan di method view
+    public void view() {
+        System.out.println("Data saat ini: ");
+        for (int i = 0; i < data.size(); i++) {
+            String[] datum = data.get(i);
+            System.out.println("Data ke-" + (i + 1) + ": " + "Nama Produk: " + datum[0] + ", Harga: " + datum[1] + ", Distributor: " + datum[2]);
+        }
+    }
+}
 
 // stok
 
