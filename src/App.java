@@ -91,18 +91,40 @@ class Produk extends Datahandler {
 // nama, stok, tanggal masuk, tanggal kadaluarsa, kategori
 class Stok extends Datahandler{
     private List<String[]> data;
+    private List<String[]> produkData;
 
-    public Stok(){
+    public Stok( List<String[]> produkData){
         this.data = new ArrayList<>();
+        this.produkData = produkData;
     }
 
-    String nama, stok, tanggal_m, tanggal_k, kategori;
+    String nama,kategori ,stok, tanggal_m, tanggal_k;
 
     Scanner stokin = new Scanner(System.in);
 
     public void create_data(){
-        System.out.print("Masukkan Nama Produk: ");
-        nama = stokin.nextLine();
+        // cek ketersediaan produk 
+        if (produkData.isEmpty()) {
+            System.out.println("Tidak ada produk yang tersedia. Tambahkan produk terlebih dahulu");
+        }
+
+        // jika produk tersedia
+        System.out.println("Pilih produk: ");
+        for (int i = 0; i < produkData.size(); i++) {
+            // menampilkan nama produk yang tersedia
+            String[] produk = produkData.get(i);
+            System.out.println((i +  1) + ". " + produk[0]);
+        }
+
+        int pilihan = -1;
+        while (pilihan < 1 || pilihan > produkData.size()) {
+            System.out.print("Masukkan nomor produk: ");
+            // pilihan = stokin.nextInt();
+            pilihan = Integer.parseInt(stokin.nextLine());
+        }
+        String[] selectedproduct = produkData.get(pilihan - 1);
+        nama = selectedproduct[0];       
+
         System.out.print("Masukkan Kategori: ");
         kategori = stokin.nextLine();
         System.out.print("Masukkan Stok: ");
@@ -111,7 +133,7 @@ class Stok extends Datahandler{
         tanggal_m = stokin.nextLine();
         System.out.print("Masukkan Tanggal kadaluarsa: ");
         tanggal_k = stokin.nextLine();
-
+        
         String[] newStock = { nama, kategori ,stok, tanggal_m, tanggal_k };
         data.add(newStock);
         System.out.println("Data telah ditambahkan: " + String.join(", ", newStock));
@@ -121,7 +143,7 @@ class Stok extends Datahandler{
         System.out.println("Data saat ini: ");
         for (int i = 0; i < data.size(); i++) {
             String[] datum = data.get(i);
-            System.out.println("Data ke-" + (i + 1) + ": " + "Nama Produk: " + datum[0] + ", Harga: " + datum[1] + ", Distributor: " + datum[2]);
+            System.out.println("Data ke-" + (i + 1) + ": " + "Nama Produk: " + datum[0] + ", Kategori: " + datum[1] + ", Stok: " + datum[2] + ", Tanggal masuk: " + datum[3]+ ", Tanggal kadaluarsa: "+ datum[4]);
         }
     }
 }
@@ -293,7 +315,7 @@ public class App {
         // produk
         Produk produk = new Produk();
         // stok
-        Stok stok = new Stok();
+        Stok stok = new Stok(produk.getData());
 
         Penjualan penjualan = new Penjualan(produk.getData());
 
