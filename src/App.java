@@ -81,6 +81,10 @@ class Produk extends Datahandler {
             System.out.println("Data ke-" + (i + 1) + ": " + "Nama Produk: " + datum[0] + ", Harga: " + datum[1] + ", Distributor: " + datum[2]);
         }
     }
+
+    public List<String[]> getData() {
+        return this.data;
+    }
 }
 
 // stok
@@ -122,7 +126,159 @@ class Stok extends Datahandler{
     }
 }
 
+// transaksi penjualan menampung seluruh penjualan 
+class TransaksiPenjualan {
+    // 3 private berguna mendaftarkan variable 
+    private List<String[]> items;
+    private String tanggal;
+    private int totalHarga;
+
+    // 3 variable diatas di panggil di constructor guna untuk menyimpan data penjualan 
+    public TransaksiPenjualan(List<String[]> items, String tanggal, int totalHarga) {
+        this.items = items;
+        this.tanggal = tanggal;
+        this.totalHarga = totalHarga;
+    }
+    // getter untuk mengambil data penjualan lalu di pasang di method setter di atas
+    public List<String[]> getItems() {
+        return items;
+    }
+
+    public String getTanggal() {
+        return tanggal;
+    }
+
+    public int getTotalHarga() {
+        return totalHarga;
+    }
+    // method print untuk menampilkan data penjualan
+    public void print() {
+        // menampilkan tanggal penjualan
+        System.out.println("Tanggal: " + tanggal);
+
+        // for loop untuk menampilkan data penjualan
+        for (int i = 0; i < items.size(); i++) {
+            // mengambil data penjualan dari arraylist items
+            String[] item = items.get(i);
+            // menampilkan data penjualan sesaui dengan tamplate
+            System.out.println("Item ke-" + (i + 1) + ": " + "Nama Produk: " + item[0] + ", Harga: " + item[1]
+                    + ", Jumlah: " + item[2] + ", Subtotal: " + item[3]);
+        }
+        // menampilkan total harga
+        System.out.println("Total Harga: " + totalHarga);
+    }
+}
 // penjualan
+// penjualan itu data barang di simpan di penjualan, 
+
+// penjualan extends datahandler agar bisa menggunakan method create_data dan view dari datahandler
+class Penjualan extends Datahandler {
+    // private data untuk menyimpan data penjualan
+    private List<TransaksiPenjualan> data;
+    private List<String[]> produkData;
+
+    // constructor untuk menyimpan data produk
+    public Penjualan(List<String[]> produkData) {
+        this.data = new ArrayList<>();
+        this.produkData = produkData;
+    }
+
+    // untuk menerima imputan dari user
+    Scanner penjualan = new Scanner(System.in);
+
+    // method create_data untuk membuat data penjualan
+    public void create_data() {
+        // listString untuk mendefinisikan variable items
+        List<String[]> items = new ArrayList<>();
+        String lanjut = "y";
+        int totalHarga = 0;
+
+        // do while untuk melakukan perulangan jika user ingin menambahkan produk lagi
+        do {
+            // menampilkan produk yang tersedia
+            System.out.println("Pilih Produk untuk Dijual: ");
+            for (int i = 0; i < produkData.size(); i++) {
+                String[] produk = produkData.get(i);
+                System.out.println((i + 1) + ". " + produk[0] + " - " + produk[1]);
+            }
+            // inputan user untuk memilih produk
+            System.out.print("Masukkan Nomor Produk: ");
+            int produkChoice = penjualan.nextInt();
+            penjualan.nextLine(); // clear newline from buffer
+
+            // jika produkChoice tidak valid
+            if (produkChoice < 1 || produkChoice > produkData.size()) {
+                System.out.println("Pilihan produk tidak valid.");
+                continue;
+            }
+
+            // mengambil data produk yang dipilih user dari arraylist produkData
+            String[] selectedProduk = produkData.get(produkChoice - 1);
+            // menyimpan nama produk dan harga produk ke dalam variable 
+            String namaProduk = selectedProduk[0];
+            // mengubah string harga produk menjadi integer parsing
+            int hargaProduk = Integer.parseInt(selectedProduk[1]);
+
+            // inputan user untuk memasukkan jumlah produk yang akan dijual
+            System.out.print("Masukkan Jumlah: ");
+
+            // mengambil inputan user
+            String jumlah = penjualan.nextLine();
+
+            // mengubah string jumlah menjadi integer parsing
+            int qty = Integer.parseInt(jumlah);
+            // menghitung subtotal
+            int subtotal = hargaProduk * qty;
+            // menghitung total harga
+            totalHarga += subtotal;
+
+            // nama produk, harga produk, jumlah , subtotal produk di simpan di arraylist items
+            String[] item = { namaProduk, String.valueOf(hargaProduk), jumlah, 
+            String.valueOf(subtotal) };
+
+            // menambahkan item ke dalam arraylist items
+            items.add(item);
+
+            // menampilkan item yang telah ditambahkan
+            System.out.print("Apakah ingin menambah produk lagi? (y/n): ");
+
+            // inputan user untuk menambahkan produk lagi
+            lanjut = penjualan.nextLine();
+
+            // jika user tidak ingin menambahkan produk lagi maka keluar dari perulangan
+        } while (lanjut.equalsIgnoreCase("y"));
+
+        // inputan user untuk memasukkan tanggal penjualan
+        System.out.print("Masukkan Tanggal: ");
+
+        // mengambil inputan user untuk tanggal penjualan 
+        String tanggal = penjualan.nextLine();
+
+        // membuat objek transaksi penjualan dengan parameter items, tanggal, totalHarga dan menyimpan ke dalam variable transaksipenjualan  
+        TransaksiPenjualan transaksi = new TransaksiPenjualan(items, tanggal, totalHarga);
+
+        // menambahkan transaksi penjualan ke dalam arraylist data
+        data.add(transaksi);
+
+        // menampilkan data penjualan
+        System.out.println("Transaksi penjualan telah ditambahkan.");
+        transaksi.print();
+    }
+    // method view untuk menampilkan data penjualan
+    public void view() {
+        // menampilkan data penjualan saat ini
+        System.out.println("Data penjualan saat ini: ");
+
+        // for loop untuk menampilkan data penjualan 
+        for (int i = 0; i < data.size(); i++) {
+
+            // menampilkan data penjualan ke-i dengan method print dari class TransaksiPenjualan ke i 
+            System.out.println("Transaksi Penjualan ke-" + (i + 1) + ": ");
+            data.get(i).print();
+        }
+    }
+}
+
 
 // laporan penjualan
 
@@ -139,6 +295,8 @@ public class App {
         // stok
         Stok stok = new Stok();
 
+        Penjualan penjualan = new Penjualan(produk.getData());
+
 
         Scanner input = new Scanner(System.in);
         int choice;
@@ -151,7 +309,7 @@ public class App {
                 System.out.println("1. Pegawai");
                 System.out.println("2. Produk");
                 System.out.println("3. Stok");
-                System.out.println("4. penjualan");
+                System.out.println("4. Penjualan");
                 System.out.println("5. Laporan penjualan");
                 System.out.println("6. Exit");
                 System.out.print("Masukkan Pilihan: ");
@@ -240,9 +398,28 @@ public class App {
 
                 case 4: 
                 // buat penjualan 
+                do {
+                    System.out.println("1. Tambah Data Penjualan");
+                    System.out.println("2. Lihat Data Penjualan");
+                    System.out.print("Masukkan Pilihan: ");
+                    choice = input.nextInt();
+                    input.nextLine();
 
-                    break;
-
+                    switch (choice) {
+                        case 1:
+                            penjualan.create_data();
+                            break;
+                        case 2:
+                            penjualan.view();
+                            break;
+                        default:
+                            System.out.println("Pilihan tidak valid.");
+                            break;
+                    }
+                    System.out.print("Apakah ingin kembali ke menu penjualan? (y/n): ");
+                    kembali = input.nextLine();
+                } while (kembali.equalsIgnoreCase("y"));
+                break;
                 case 5:
                 // setelah buat penjualan bisa liat laporan penjualan nya disini
 
