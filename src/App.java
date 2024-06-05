@@ -299,11 +299,38 @@ class Penjualan extends Datahandler {
             data.get(i).print();
         }
     }
+
+    // Method getData()
+    public List<TransaksiPenjualan> getData() {
+        return this.data;
+    }
 }
 
 
 // laporan penjualan
+class LaporanPenjualan {
+    private List<TransaksiPenjualan> data;
 
+    public LaporanPenjualan() {
+        this.data = new ArrayList<>();
+    }
+
+    public void addPenjualan(TransaksiPenjualan penjualan) {
+        this.data.add(penjualan);
+    }
+
+    public void printLaporan() {
+        System.out.println("Laporan Penjualan:");
+        int totalHarga = 0;
+        for (int i = 0; i < data.size(); i++) {
+            TransaksiPenjualan penjualan = data.get(i);
+            System.out.println("Transaksi Penjualan ke-" + (i + 1) + ": ");
+            penjualan.print();
+            totalHarga += penjualan.getTotalHarga();
+        }
+        System.out.println("Total Harga: " + totalHarga);
+    }
+}
 
 
 
@@ -363,7 +390,7 @@ public class App {
                                 break;
                         } 
                         System.out.print("Apakah ingin kembali ke menu pegawai? (y/n): ");
-                         kembali = input.nextLine();
+                        kembali = input.nextLine();
                     } while(kembali.equalsIgnoreCase("y"));
                         
                     break;
@@ -444,7 +471,11 @@ public class App {
                 break;
                 case 5:
                 // setelah buat penjualan bisa liat laporan penjualan nya disini
-
+                LaporanPenjualan laporanPenjualan = new LaporanPenjualan();
+                    for (TransaksiPenjualan transaksiPenjualan : penjualan.getData()) {
+                        laporanPenjualan.addPenjualan(transaksiPenjualan);
+                    }
+                    laporanPenjualan.printLaporan();
                     break;
             
                 default:
