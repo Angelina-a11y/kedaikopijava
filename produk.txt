@@ -1,1 +1,2 @@
 espresso, 10000, JNT
+americano, 10000, Jaya 

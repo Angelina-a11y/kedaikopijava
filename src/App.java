@@ -119,13 +119,13 @@ class Produk extends Datahandler {
 
     // setelah disimpan di arraylist tampilkan di method view
     public void view(){
+        System.out.println("Data saat ini: ");
         data.clear();
         try (BufferedReader reader = new BufferedReader(new FileReader("produk.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] loadeddata= line.split(", ");
                 data.add(loadeddata);
-                System.out.println("Data saat ini: ");
             }
             for (int i = 0; i < data.size(); i++){
                 String[] datum = data.get(i);
@@ -151,6 +151,7 @@ class Stok extends Datahandler{
     public Stok( List<String[]> produkData){
         this.data = new ArrayList<>();
         this.produkData = produkData;
+        loadData();
     }
 
     String nama,kategori ,stok, tanggal_m, tanggal_k;
@@ -192,15 +193,50 @@ class Stok extends Datahandler{
         String[] newStock = { nama, kategori ,stok, tanggal_m, tanggal_k };
         data.add(newStock);
         System.out.println("Data telah ditambahkan: " + String.join(", ", newStock));
+
+        save(newStock);
     }
 
-    public void view(){
-        System.out.println("Data saat ini: ");
-        for (int i = 0; i < data.size(); i++) {
-            String[] datum = data.get(i);
-            System.out.println("Data ke-" + (i + 1) + ": " + "Nama Produk: " + datum[0] + ", Kategori: " + datum[1] + ", Stok: " + datum[2] + ", Tanggal masuk: " + datum[3]+ ", Tanggal kadaluarsa: "+ datum[4]);
+    private void save(String[] newStok){
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("stok.txt", true))) {
+            writer.write(String.join(", ",newStok));
+            writer.newLine();
+        } catch (IOException e) {
+            System.out.println("Terjadi kesalahan saat menyimpan data: " + e.getMessage());
         }
     }
+    public void view(){
+        System.out.println("Data saat ini: ");
+        data.clear();
+        try (BufferedReader reader = new BufferedReader(new FileReader("stok.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] loadeddata= line.split(", ");
+                data.add(loadeddata);
+            }
+            for (int i = 0; i < data.size(); i++){
+                String[] datum = data.get(i);
+                System.out.println("Data ke-"+ (i + 1) + ": " + "Nama Produk: " + datum[0] + ", Kategori: " + datum[1] + ", Stok: " + datum[2] + ", Tanggal Masuk: " + datum[3] + ", Tanggal kadaluarsa:" + datum[4]);
+
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+            System.out.println("Terjadi kesalahan saat memuat data: " + e.getMessage());
+        }
+    }
+
+    private void loadData(){
+        try (BufferedReader reader = new BufferedReader(new FileReader("produk.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] produk = line.split(", ");
+                produkData.add(produk);
+            }
+        }catch (IOException e) {
+            System.out.println("Terjadi kesalahan saat memuat data produk: "+e.getMessage());
+        }
+    }
+
 }
 
 // transaksi penjualan menampung seluruh penjualan 
