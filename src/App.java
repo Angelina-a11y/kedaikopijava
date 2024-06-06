@@ -101,14 +101,39 @@ class Produk extends Datahandler {
         String[] newProduk = { namaProduk, harga, distributor };
         data.add(newProduk);
         System.out.println("Data telah ditambahkan: " + String.join(", ", newProduk));
+
+        
+        // save created data
+        save(newProduk);
+    }
+
+    // save created data ke produk.txt
+    private void save(String[] newProduk){
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("produk.txt", true))) {
+            writer.write(String.join(", ",newProduk));
+            writer.newLine();
+        } catch (IOException e) {
+            System.out.println("Terjadi kesalahan saat menyimpan data: " + e.getMessage());
+        }
     }
 
     // setelah disimpan di arraylist tampilkan di method view
-    public void view() {
-        System.out.println("Data saat ini: ");
-        for (int i = 0; i < data.size(); i++) {
-            String[] datum = data.get(i);
-            System.out.println("Data ke-" + (i + 1) + ": " + "Nama Produk: " + datum[0] + ", Harga: " + datum[1] + ", Distributor: " + datum[2]);
+    public void view(){
+        data.clear();
+        try (BufferedReader reader = new BufferedReader(new FileReader("produk.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] loadeddata= line.split(", ");
+                data.add(loadeddata);
+                System.out.println("Data saat ini: ");
+            }
+            for (int i = 0; i < data.size(); i++){
+                String[] datum = data.get(i);
+                System.out.println("Data ke-"+ (i + 1) + ": " + "Nama Produk: " + datum[0] + ", Harga: " + datum[1] + ", Distributo: " + datum[2]);
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+            System.out.println("Terjadi kesalahan saat memuat data: " + e.getMessage());
         }
     }
 
