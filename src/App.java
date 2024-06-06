@@ -1,4 +1,9 @@
 import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -6,6 +11,7 @@ import java.util.List;
 abstract class Datahandler {
     public abstract void create_data();
     public abstract void view();
+    // public abstract void save();
 }
 
 // pegawai 
@@ -35,16 +41,40 @@ class Pegawai extends Datahandler {
         data.add(newpegawai);
         System.out.println("Data telah ditambahkan: "+ String.join(", ", newpegawai));
 
+        // save created data
+        save(newpegawai);
     }
 
-    // setelah disimpan di arraylist tampilkan di method view
-    public void view(){
-        System.out.println("Data saat ini: ");
-        for (int i = 0; i < data.size(); i++){
-            String[] datum = data.get(i);
-            System.out.println("Data ke-"+ (i + 1) + ": " + "Kode: " + datum[0] + ", Nama: " + datum[1] + ", Alamat: " + datum[2] + ", Nomor Telepon: " + datum[3]);
+    // save created data ke pegawai.txt
+    private void save(String[] newpegawai){
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("pegawai.txt", true))) {
+            writer.write(String.join(", ",newpegawai));
+            writer.newLine();
+        } catch (IOException e) {
+            System.out.println("Terjadi kesalahan saat menyimpan data: " + e.getMessage());
         }
     }
+
+    // menampilkan data dari pegawai.txt
+    public void view(){
+        data.clear();
+        try (BufferedReader reader = new BufferedReader(new FileReader("pegawai.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] loadeddata= line.split(", ");
+                data.add(loadeddata);
+                System.out.println("Data saat ini: ");
+            }
+            for (int i = 0; i < data.size(); i++){
+                String[] datum = data.get(i);
+                System.out.println("Data ke-"+ (i + 1) + ": " + "Kode: " + datum[0] + ", Nama: " + datum[1] + ", Alamat: " + datum[2] + ", Nomor Telepon: " + datum[3]);
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+            System.out.println("Terjadi kesalahan saat memuat data: " + e.getMessage());
+        }
+    }
+    
 }
 
 // produk
@@ -328,7 +358,7 @@ class LaporanPenjualan {
             penjualan.print();
             totalHarga += penjualan.getTotalHarga();
         }
-        System.out.println("Total Harga: " + totalHarga);
+        // System.out.println("Total Harga: " + totalHarga);
     }
 }
 
