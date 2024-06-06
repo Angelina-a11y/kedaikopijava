@@ -10,11 +10,12 @@ import java.util.List;
 // datahandler
 abstract class Datahandler {
     public abstract void create_data();
+
     public abstract void view();
     // public abstract void save();
 }
 
-// pegawai 
+// pegawai
 // beri pilihan lagi mau lihat data pegawai / buat data pegawai baru
 class Pegawai extends Datahandler {
     private List<String[]> data;
@@ -26,8 +27,9 @@ class Pegawai extends Datahandler {
     String kode, nama, alamat, tlp;
 
     Scanner pegawai = new Scanner(System.in);
-    // method ini buat data 
-    public void create_data(){
+
+    // method ini buat data
+    public void create_data() {
         System.out.print("Masukkan Kode: ");
         kode = pegawai.nextLine();
         System.out.print("Masukkan Nama: ");
@@ -37,18 +39,18 @@ class Pegawai extends Datahandler {
         System.out.print("Masukkan Nomor Telepon: ");
         tlp = pegawai.nextLine();
 
-        String[] newpegawai ={kode,nama,alamat,tlp};
+        String[] newpegawai = { kode, nama, alamat, tlp };
         data.add(newpegawai);
-        System.out.println("Data telah ditambahkan: "+ String.join(", ", newpegawai));
+        System.out.println("Data telah ditambahkan: " + String.join(", ", newpegawai));
 
         // save created data
         save(newpegawai);
     }
 
     // save created data ke pegawai.txt
-    private void save(String[] newpegawai){
+    private void save(String[] newpegawai) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("pegawai.txt", true))) {
-            writer.write(String.join(", ",newpegawai));
+            writer.write(String.join(", ", newpegawai));
             writer.newLine();
         } catch (IOException e) {
             System.out.println("Terjadi kesalahan saat menyimpan data: " + e.getMessage());
@@ -56,25 +58,26 @@ class Pegawai extends Datahandler {
     }
 
     // menampilkan data dari pegawai.txt
-    public void view(){
+    public void view() {
         data.clear();
         try (BufferedReader reader = new BufferedReader(new FileReader("pegawai.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] loadeddata= line.split(", ");
+                String[] loadeddata = line.split(", ");
                 data.add(loadeddata);
                 System.out.println("Data saat ini: ");
             }
-            for (int i = 0; i < data.size(); i++){
+            for (int i = 0; i < data.size(); i++) {
                 String[] datum = data.get(i);
-                System.out.println("Data ke-"+ (i + 1) + ": " + "Kode: " + datum[0] + ", Nama: " + datum[1] + ", Alamat: " + datum[2] + ", Nomor Telepon: " + datum[3]);
+                System.out.println("Data ke-" + (i + 1) + ": " + "Kode: " + datum[0] + ", Nama: " + datum[1]
+                        + ", Alamat: " + datum[2] + ", Nomor Telepon: " + datum[3]);
             }
         } catch (Exception e) {
             // TODO: handle exception
             System.out.println("Terjadi kesalahan saat memuat data: " + e.getMessage());
         }
     }
-    
+
 }
 
 // produk
@@ -89,7 +92,7 @@ class Produk extends Datahandler {
 
     Scanner produk = new Scanner(System.in);
 
-    // method ini buat data 
+    // method ini buat data
     public void create_data() {
         System.out.print("Masukkan Nama Produk: ");
         namaProduk = produk.nextLine();
@@ -102,15 +105,14 @@ class Produk extends Datahandler {
         data.add(newProduk);
         System.out.println("Data telah ditambahkan: " + String.join(", ", newProduk));
 
-        
         // save created data
         save(newProduk);
     }
 
     // save created data ke produk.txt
-    private void save(String[] newProduk){
+    private void save(String[] newProduk) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("produk.txt", true))) {
-            writer.write(String.join(", ",newProduk));
+            writer.write(String.join(", ", newProduk));
             writer.newLine();
         } catch (IOException e) {
             System.out.println("Terjadi kesalahan saat menyimpan data: " + e.getMessage());
@@ -118,18 +120,19 @@ class Produk extends Datahandler {
     }
 
     // setelah disimpan di arraylist tampilkan di method view
-    public void view(){
+    public void view() {
         System.out.println("Data saat ini: ");
         data.clear();
         try (BufferedReader reader = new BufferedReader(new FileReader("produk.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] loadeddata= line.split(", ");
+                String[] loadeddata = line.split(", ");
                 data.add(loadeddata);
             }
-            for (int i = 0; i < data.size(); i++){
+            for (int i = 0; i < data.size(); i++) {
                 String[] datum = data.get(i);
-                System.out.println("Data ke-"+ (i + 1) + ": " + "Nama Produk: " + datum[0] + ", Harga: " + datum[1] + ", Distributo: " + datum[2]);
+                System.out.println("Data ke-" + (i + 1) + ": " + "Nama Produk: " + datum[0] + ", Harga: " + datum[1]
+                        + ", Distributo: " + datum[2]);
             }
         } catch (Exception e) {
             // TODO: handle exception
@@ -144,22 +147,22 @@ class Produk extends Datahandler {
 
 // stok
 // nama, stok, tanggal masuk, tanggal kadaluarsa, kategori
-class Stok extends Datahandler{
+class Stok extends Datahandler {
     private List<String[]> data;
     private List<String[]> produkData;
 
-    public Stok( List<String[]> produkData){
+    public Stok(List<String[]> produkData) {
         this.data = new ArrayList<>();
         this.produkData = produkData;
         loadData();
     }
 
-    String nama,kategori ,stok, tanggal_m, tanggal_k;
+    String nama, kategori, stok, tanggal_m, tanggal_k;
 
     Scanner stokin = new Scanner(System.in);
 
-    public void create_data(){
-        // cek ketersediaan produk 
+    public void create_data() {
+        // cek ketersediaan produk
         if (produkData.isEmpty()) {
             System.out.println("Tidak ada produk yang tersedia. Tambahkan produk terlebih dahulu");
         }
@@ -169,7 +172,7 @@ class Stok extends Datahandler{
         for (int i = 0; i < produkData.size(); i++) {
             // menampilkan nama produk yang tersedia
             String[] produk = produkData.get(i);
-            System.out.println((i +  1) + ". " + produk[0]);
+            System.out.println((i + 1) + ". " + produk[0]);
         }
 
         int pilihan = -1;
@@ -179,7 +182,7 @@ class Stok extends Datahandler{
             pilihan = Integer.parseInt(stokin.nextLine());
         }
         String[] selectedproduct = produkData.get(pilihan - 1);
-        nama = selectedproduct[0];       
+        nama = selectedproduct[0];
 
         System.out.print("Masukkan Kategori: ");
         kategori = stokin.nextLine();
@@ -189,34 +192,36 @@ class Stok extends Datahandler{
         tanggal_m = stokin.nextLine();
         System.out.print("Masukkan Tanggal kadaluarsa: ");
         tanggal_k = stokin.nextLine();
-        
-        String[] newStock = { nama, kategori ,stok, tanggal_m, tanggal_k };
+
+        String[] newStock = { nama, kategori, stok, tanggal_m, tanggal_k };
         data.add(newStock);
         System.out.println("Data telah ditambahkan: " + String.join(", ", newStock));
 
         save(newStock);
     }
 
-    private void save(String[] newStok){
+    private void save(String[] newStok) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("stok.txt", true))) {
-            writer.write(String.join(", ",newStok));
+            writer.write(String.join(", ", newStok));
             writer.newLine();
         } catch (IOException e) {
             System.out.println("Terjadi kesalahan saat menyimpan data: " + e.getMessage());
         }
     }
-    public void view(){
+
+    public void view() {
         System.out.println("Data saat ini: ");
         data.clear();
         try (BufferedReader reader = new BufferedReader(new FileReader("stok.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] loadeddata= line.split(", ");
+                String[] loadeddata = line.split(", ");
                 data.add(loadeddata);
             }
-            for (int i = 0; i < data.size(); i++){
+            for (int i = 0; i < data.size(); i++) {
                 String[] datum = data.get(i);
-                System.out.println("Data ke-"+ (i + 1) + ": " + "Nama Produk: " + datum[0] + ", Kategori: " + datum[1] + ", Stok: " + datum[2] + ", Tanggal Masuk: " + datum[3] + ", Tanggal kadaluarsa:" + datum[4]);
+                System.out.println("Data ke-" + (i + 1) + ": " + "Nama Produk: " + datum[0] + ", Kategori: " + datum[1]
+                        + ", Stok: " + datum[2] + ", Tanggal Masuk: " + datum[3] + ", Tanggal kadaluarsa:" + datum[4]);
 
             }
         } catch (Exception e) {
@@ -225,36 +230,44 @@ class Stok extends Datahandler{
         }
     }
 
-    private void loadData(){
+    private void loadData() {
         try (BufferedReader reader = new BufferedReader(new FileReader("produk.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] produk = line.split(", ");
                 produkData.add(produk);
             }
-        }catch (IOException e) {
-            System.out.println("Terjadi kesalahan saat memuat data produk: "+e.getMessage());
+        } catch (IOException e) {
+            System.out.println("Terjadi kesalahan saat memuat data produk: " + e.getMessage());
         }
     }
 
 }
 
-// transaksi penjualan menampung seluruh penjualan 
+// transaksi penjualan menampung seluruh penjualan
 class TransaksiPenjualan {
-    // 3 private berguna mendaftarkan variable 
+    // 3 private berguna mendaftarkan variable
     private List<String[]> items;
     private String tanggal;
     private int totalHarga;
+    private String namaPembeli;
 
-    // 3 variable diatas di panggil di constructor guna untuk menyimpan data penjualan 
-    public TransaksiPenjualan(List<String[]> items, String tanggal, int totalHarga) {
+    // 3 variable diatas di panggil di constructor guna untuk menyimpan data
+    // penjualan
+    public TransaksiPenjualan(List<String[]> items, String namaPembeli, String tanggal, int totalHarga) {
         this.items = items;
+        this.namaPembeli = namaPembeli;
         this.tanggal = tanggal;
         this.totalHarga = totalHarga;
     }
+
     // getter untuk mengambil data penjualan lalu di pasang di method setter di atas
     public List<String[]> getItems() {
         return items;
+    }
+
+    public String getNamaPembeli() {
+        return namaPembeli;
     }
 
     public String getTanggal() {
@@ -264,6 +277,7 @@ class TransaksiPenjualan {
     public int getTotalHarga() {
         return totalHarga;
     }
+
     // method print untuk menampilkan data penjualan
     public void print() {
         // menampilkan tanggal penjualan
@@ -271,20 +285,18 @@ class TransaksiPenjualan {
 
         // for loop untuk menampilkan data penjualan
         for (int i = 0; i < items.size(); i++) {
-            // mengambil data penjualan dari arraylist items
             String[] item = items.get(i);
-            // menampilkan data penjualan sesaui dengan tamplate
-            System.out.println("Item ke-" + (i + 1) + ": " + "Nama Produk: " + item[0] + ", Harga: " + item[1]
-                    + ", Jumlah: " + item[2] + ", Subtotal: " + item[3]);
+            System.out.println("Item ke-" + (i + 1) + ": Nama Pembeli: " + namaPembeli + ", Nama Produk: " + item[0] + ", Harga: " + item[1] + ", Jumlah: " + item[2] + ", Subtotal: " + item[3]);
         }
         // menampilkan total harga
         System.out.println("Total Harga: " + totalHarga);
     }
 }
 // penjualan
-// penjualan itu data barang di simpan di penjualan, 
+// penjualan itu data barang di simpan di penjualan,
 
-// penjualan extends datahandler agar bisa menggunakan method create_data dan view dari datahandler
+// penjualan extends datahandler agar bisa menggunakan method create_data dan
+// view dari datahandler
 class Penjualan extends Datahandler {
     // private data untuk menyimpan data penjualan
     private List<TransaksiPenjualan> data;
@@ -305,6 +317,9 @@ class Penjualan extends Datahandler {
         List<String[]> items = new ArrayList<>();
         String lanjut = "y";
         int totalHarga = 0;
+        
+        System.out.print("Masukkan Nama Pembeli: ");
+        String namaPembeli = penjualan.nextLine();
 
         // do while untuk melakukan perulangan jika user ingin menambahkan produk lagi
         do {
@@ -327,7 +342,7 @@ class Penjualan extends Datahandler {
 
             // mengambil data produk yang dipilih user dari arraylist produkData
             String[] selectedProduk = produkData.get(produkChoice - 1);
-            // menyimpan nama produk dan harga produk ke dalam variable 
+            // menyimpan nama produk dan harga produk ke dalam variable
             String namaProduk = selectedProduk[0];
             // mengubah string harga produk menjadi integer parsing
             int hargaProduk = Integer.parseInt(selectedProduk[1]);
@@ -345,9 +360,10 @@ class Penjualan extends Datahandler {
             // menghitung total harga
             totalHarga += subtotal;
 
-            // nama produk, harga produk, jumlah , subtotal produk di simpan di arraylist items
-            String[] item = { namaProduk, String.valueOf(hargaProduk), jumlah, 
-            String.valueOf(subtotal) };
+            // nama produk, harga produk, jumlah , subtotal produk di simpan di arraylist
+            // items
+            String[] item = { namaProduk, String.valueOf(hargaProduk), jumlah,
+                    String.valueOf(subtotal) };
 
             // menambahkan item ke dalam arraylist items
             items.add(item);
@@ -364,11 +380,12 @@ class Penjualan extends Datahandler {
         // inputan user untuk memasukkan tanggal penjualan
         System.out.print("Masukkan Tanggal: ");
 
-        // mengambil inputan user untuk tanggal penjualan 
+        // mengambil inputan user untuk tanggal penjualan
         String tanggal = penjualan.nextLine();
 
-        // membuat objek transaksi penjualan dengan parameter items, tanggal, totalHarga dan menyimpan ke dalam variable transaksipenjualan  
-        TransaksiPenjualan transaksi = new TransaksiPenjualan(items, tanggal, totalHarga);
+        // membuat objek transaksi penjualan dengan parameter items, tanggal, totalHarga
+        // dan menyimpan ke dalam variable transaksipenjualan
+        TransaksiPenjualan transaksi = new TransaksiPenjualan(items, namaPembeli, tanggal, totalHarga);
 
         // menambahkan transaksi penjualan ke dalam arraylist data
         data.add(transaksi);
@@ -377,15 +394,17 @@ class Penjualan extends Datahandler {
         System.out.println("Transaksi penjualan telah ditambahkan.");
         transaksi.print();
     }
+
     // method view untuk menampilkan data penjualan
     public void view() {
         // menampilkan data penjualan saat ini
         System.out.println("Data penjualan saat ini: ");
 
-        // for loop untuk menampilkan data penjualan 
+        // for loop untuk menampilkan data penjualan
         for (int i = 0; i < data.size(); i++) {
 
-            // menampilkan data penjualan ke-i dengan method print dari class TransaksiPenjualan ke i 
+            // menampilkan data penjualan ke-i dengan method print dari class
+            // TransaksiPenjualan ke i
             System.out.println("Transaksi Penjualan ke-" + (i + 1) + ": ");
             data.get(i).print();
         }
@@ -396,7 +415,6 @@ class Penjualan extends Datahandler {
         return this.data;
     }
 }
-
 
 // laporan penjualan
 class LaporanPenjualan {
@@ -423,13 +441,10 @@ class LaporanPenjualan {
     }
 }
 
-
-
-
 public class App {
     public static void main(String[] args) throws Exception {
         // pegawai
-        Pegawai pegawai = new Pegawai(); 
+        Pegawai pegawai = new Pegawai();
         // produk
         Produk produk = new Produk();
         // stok
@@ -437,12 +452,11 @@ public class App {
 
         Penjualan penjualan = new Penjualan(produk.getData());
 
-
         Scanner input = new Scanner(System.in);
         int choice;
         String kembali;
 
-        do{
+        do {
             do {
                 System.out.println("===================Sistem Kedai kopi==================");
                 System.out.println("Menu: ");
@@ -454,14 +468,14 @@ public class App {
                 System.out.println("6. Exit");
                 System.out.print("Masukkan Pilihan: ");
                 choice = input.nextInt();
-                input.nextLine(); //clear newline from buffer
+                input.nextLine(); // clear newline from buffer
 
-                System.out.println( "======================================================");
-            }while (choice < 1 || choice > 6); //choice harus valid
-    
+                System.out.println("======================================================");
+            } while (choice < 1 || choice > 6); // choice harus valid
+
             switch (choice) {
                 case 1:
-                // disini buat pilihan mau liat data atau buat data baru
+                    // disini buat pilihan mau liat data atau buat data baru
                     do {
                         System.out.println("1. Tambah Data Pegawai");
                         System.out.println("2. Lihat Data Pegawai");
@@ -479,14 +493,14 @@ public class App {
                             default:
                                 System.out.println("Pilihan tidak valid.");
                                 break;
-                        } 
+                        }
                         System.out.print("Apakah ingin kembali ke menu pegawai? (y/n): ");
                         kembali = input.nextLine();
-                    } while(kembali.equalsIgnoreCase("y"));
-                        
+                    } while (kembali.equalsIgnoreCase("y"));
+
                     break;
-                case 2: 
-                // disini buat pilihan mau liat data atau buat data produk
+                case 2:
+                    // disini buat pilihan mau liat data atau buat data produk
                     do {
                         System.out.println("1. Tambah Data Produk");
                         System.out.println("2. Lihat Data Produk");
@@ -504,82 +518,82 @@ public class App {
                             default:
                                 System.out.println("Pilihan tidak valid.");
                                 break;
-                        } 
+                        }
                         System.out.print("Apakah ingin kembali ke menu produk? (y/n): ");
                         kembali = input.nextLine();
-                    } while(kembali.equalsIgnoreCase("y"));
+                    } while (kembali.equalsIgnoreCase("y"));
 
                     break;
-                
+
                 case 3:
-                // disini buat pilihan mau liat data atau buat data stok
-                do {
-                    System.out.println("1. Tambah Data Stok");
-                    System.out.println("2. Lihat Data Stok");
-                    System.out.print("Masukkan Pilihan: ");
-                    choice = input.nextInt();
-                    input.nextLine();
+                    // disini buat pilihan mau liat data atau buat data stok
+                    do {
+                        System.out.println("1. Tambah Data Stok");
+                        System.out.println("2. Lihat Data Stok");
+                        System.out.print("Masukkan Pilihan: ");
+                        choice = input.nextInt();
+                        input.nextLine();
 
-                    switch (choice) {
-                        case 1:
-                            stok.create_data();
-                            break;
-                        case 2:
-                            stok.view();
-                            break;
-                        default:
-                            System.out.println("Pilihan tidak valid.");
-                            break;
-                    } 
-                    System.out.print("Apakah ingin kembali ke menu stok? (y/n): ");
-                    kembali = input.nextLine();
-                } while(kembali.equalsIgnoreCase("y"));
+                        switch (choice) {
+                            case 1:
+                                stok.create_data();
+                                break;
+                            case 2:
+                                stok.view();
+                                break;
+                            default:
+                                System.out.println("Pilihan tidak valid.");
+                                break;
+                        }
+                        System.out.print("Apakah ingin kembali ke menu stok? (y/n): ");
+                        kembali = input.nextLine();
+                    } while (kembali.equalsIgnoreCase("y"));
                     break;
 
-                case 4: 
-                // buat penjualan 
-                do {
-                    System.out.println("1. Tambah Data Penjualan");
-                    System.out.println("2. Lihat Data Penjualan");
-                    System.out.print("Masukkan Pilihan: ");
-                    choice = input.nextInt();
-                    input.nextLine();
+                case 4:
+                    // buat penjualan
+                    do {
+                        System.out.println("1. Tambah Data Penjualan");
+                        System.out.println("2. Lihat Data Penjualan");
+                        System.out.print("Masukkan Pilihan: ");
+                        choice = input.nextInt();
+                        input.nextLine();
 
-                    switch (choice) {
-                        case 1:
-                            penjualan.create_data();
-                            break;
-                        case 2:
-                            penjualan.view();
-                            break;
-                        default:
-                            System.out.println("Pilihan tidak valid.");
-                            break;
-                    }
-                    System.out.print("Apakah ingin kembali ke menu penjualan? (y/n): ");
-                    kembali = input.nextLine();
-                } while (kembali.equalsIgnoreCase("y"));
-                break;
+                        switch (choice) {
+                            case 1:
+                                penjualan.create_data();
+                                break;
+                            case 2:
+                                penjualan.view();
+                                break;
+                            default:
+                                System.out.println("Pilihan tidak valid.");
+                                break;
+                        }
+                        System.out.print("Apakah ingin kembali ke menu penjualan? (y/n): ");
+                        kembali = input.nextLine();
+                    } while (kembali.equalsIgnoreCase("y"));
+                    break;
                 case 5:
-                // setelah buat penjualan bisa liat laporan penjualan nya disini
-                LaporanPenjualan laporanPenjualan = new LaporanPenjualan();
+                    // setelah buat penjualan bisa liat laporan penjualan nya disini
+                    LaporanPenjualan laporanPenjualan = new LaporanPenjualan();
                     for (TransaksiPenjualan transaksiPenjualan : penjualan.getData()) {
                         laporanPenjualan.addPenjualan(transaksiPenjualan);
                     }
                     laporanPenjualan.printLaporan();
                     break;
-            
+
                 default:
                     System.out.println("Pilihan tidak valid.");
                     break;
             }
             System.out.print("Apakah ingin kembali ke menu utama ? (y/n) : ");
             kembali = input.nextLine();
-            
+
         } while (kembali.equalsIgnoreCase("y"));
 
         System.out.println("Terima kasih telah menggunakan sistem kedai kopi!");
         input.close();
     }
-        
+
 }
