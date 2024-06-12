@@ -393,22 +393,31 @@ class Penjualan extends Datahandler {
         transaksi.print();
     }
 
+    // Method getData()
+    private void save (TransaksiPenjualan transaksi) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("penjualan.txt", true))) {
+            writer.write("Nama Pembeli: " + transaksi.getNamaPembeli() + ", Tanggal: " + transaksi.getTanggal() + ", Total Harga: " + transaksi.getTotalHarga());
+            writer.newLine();
+            for (String[] item : transaksi.getItems()) {
+                writer.write("Nama Produk: " + item[0] + ", Harga: " + item[1] + ", Jumlah: " + item[2] + ", Subtotal: " + item[3]);
+                writer.newLine();
+            }
+            writer.write("------");
+            writer.newLine();
+        } catch (IOException e) {
+            System.out.println("Terjadi kesalahan saat menyimpan data: " + e.getMessage());
+        }
+    }
+
     // method view untuk menampilkan data penjualan
     public void view() {
-        // menampilkan data penjualan saat ini
         System.out.println("Data penjualan saat ini: ");
-
-        // for loop untuk menampilkan data penjualan
         for (int i = 0; i < data.size(); i++) {
-
-            // menampilkan data penjualan ke-i dengan method print dari class
-            // TransaksiPenjualan ke i
             System.out.println("Transaksi Penjualan ke-" + (i + 1) + ": ");
             data.get(i).print();
         }
     }
-
-    // Method getData()
+        // Method getData()
     public List<TransaksiPenjualan> getData() {
         return this.data;
     }
