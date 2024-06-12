@@ -293,8 +293,6 @@ class TransaksiPenjualan {
     }
 }
 // penjualan
-// penjualan itu data barang di simpan di penjualan,
-
 // penjualan extends datahandler agar bisa menggunakan method create_data dan
 // view dari datahandler
 class Penjualan extends Datahandler {

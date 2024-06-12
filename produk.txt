@@ -1,3 +1,5 @@
 espresso, 10000, JNT
 americano, 10000, Jaya 
 kopi, 15000, motto
+Kopi asing, 200, 2
+KOPI GAK ASING, 300, 1
