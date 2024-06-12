@@ -391,6 +391,7 @@ class Penjualan extends Datahandler {
         // menampilkan data penjualan
         System.out.println("Transaksi penjualan telah ditambahkan.");
         transaksi.print();
+        save(transaksi);
     }
 
     // Method getData()
