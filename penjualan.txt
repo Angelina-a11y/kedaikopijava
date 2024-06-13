@@ -1,0 +1,14 @@
+Nama Pembeli: ridho, Tanggal: 9, Total Harga: 60000
+Nama Pembeli: amir, Tanggal: 3, Total Harga: 30000
+Nama Pembeli: ridho, Tanggal: 9, Total Harga: 110000
+Nama Pembeli: Ridho, Tanggal: 8, Total Harga: 10000
+Nama Produk: americano, Harga: 10000, Jumlah: 1, Subtotal: 10000
+------
+Nama Pembeli: koki, Tanggal: 6, Total Harga: 30000
+Nama Produk: espresso, Harga: 10000, Jumlah: 2, Subtotal: 20000
+Nama Produk: americano, Harga: 10000, Jumlah: 1, Subtotal: 10000
+------
+Nama Pembeli: koki, Tanggal: 6, Total Harga: 30000
+Nama Produk: espresso, Harga: 10000, Jumlah: 2, Subtotal: 20000
+Nama Produk: americano, Harga: 10000, Jumlah: 1, Subtotal: 10000
+------
