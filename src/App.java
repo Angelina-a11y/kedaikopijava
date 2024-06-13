@@ -12,7 +12,6 @@ abstract class Datahandler {
     public abstract void create_data();
 
     public abstract void view();
-    // public abstract void save();
 }
 
 // pegawai
@@ -594,6 +593,10 @@ public class App {
                 default:
                     System.out.println("Pilihan tidak valid.");
                     break;
+                case 6:
+                    System.out.println("Terima kasih telah menggunakan sistem kedai kopi!");
+                    input.close();
+                break;
             }
             System.out.print("Apakah ingin kembali ke menu utama ? (y/n) : ");
             kembali = input.nextLine();

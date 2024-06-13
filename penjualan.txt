@@ -1,0 +1,10 @@
+Nama Pembeli: lynn, Tanggal: 13 June 2024, Total Harga: 20000
+Nama Produk: espresso, Harga: 10000, Jumlah: 2, Subtotal: 20000
+------
+Nama Pembeli: lina, Tanggal: 13 june 2024, Total Harga: 20000
+Nama Produk: americano, Harga: 10000, Jumlah: 1, Subtotal: 10000
+Nama Produk: espresso, Harga: 10000, Jumlah: 1, Subtotal: 10000
+------
+Nama Pembeli: angel , Tanggal: 10 Jun 2024, Total Harga: 10000
+Nama Produk: espresso, Harga: 10000, Jumlah: 1, Subtotal: 10000
+------
