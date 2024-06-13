@@ -375,7 +375,7 @@ class Penjualan extends Datahandler {
                 writer.write("Nama Produk: " + item[1] + ", Harga: " + item[2] + ", Jumlah: " + item[3] + ", Subtotal: " + item[4]);
                 writer.newLine();
             }
-            writer.write("------");y
+            writer.write("------");
             writer.newLine();
         } catch (IOException e) {
             System.out.println("Terjadi kesalahan saat menyimpan data: " + e.getMessage());
@@ -401,8 +401,7 @@ class Penjualan extends Datahandler {
             }
             System.out.println("------");
             System.out.println("Total dari seluruh transaksi: " + totalSeluruhTransaksi);
-        } 
-        catch (IOException e) {
+        } catch (IOException e) {
             System.out.println("Terjadi kesalahan saat memuat data: " + e.getMessage());
         }
     }
