@@ -368,15 +368,29 @@ class Penjualan extends Datahandler {
     }
 
     private void save(TransaksiPenjualan transaksi) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("penjualan.txt", true))) {
-            writer.write("Nama Pembeli: " + transaksi.getNamaPembeli() + ", Tanggal: " + transaksi.getTanggal() + ", Total Harga: " + transaksi.getTotalHarga());
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("penjualan.txt", true));BufferedWriter writerLaporan = new BufferedWriter(new FileWriter("laporanpenjualan.txt", true))) {
+
+        // Write to penjualan.txt
+        writer.write("Nama Pembeli: " + transaksi.getNamaPembeli() + ", Tanggal: " + transaksi.getTanggal() + ", Total Harga: " + transaksi.getTotalHarga());
+        writer.newLine();
+        for (String[] item : transaksi.getItems()) {
+            writer.write("Nama Produk: " + item[1] + ", Harga: " + item[2] + ", Jumlah: " + item[3] + ", Subtotal: " + item[4]);
             writer.newLine();
-            for (String[] item : transaksi.getItems()) {
-                writer.write("Nama Produk: " + item[1] + ", Harga: " + item[2] + ", Jumlah: " + item[3] + ", Subtotal: " + item[4]);
-                writer.newLine();
-            }
-            writer.write("------");
-            writer.newLine();
+        }
+        writer.write("------");
+        writer.newLine();
+
+        // Write to laporanpenjualan.txt
+        writerLaporan.write("Nama Pembeli: " + transaksi.getNamaPembeli() + ", Tanggal: " + transaksi.getTanggal() + ", Total Harga: " + transaksi.getTotalHarga());
+        writerLaporan.newLine();
+        for (String[] item : transaksi.getItems()) {
+            writerLaporan.write("Nama Produk: " + item[1] + ", Harga: " + item[2] + ", Jumlah: " + item[3] + ", Subtotal: " + item[4]);
+            writerLaporan.newLine();
+        }
+        writerLaporan.write("------");
+        writerLaporan.newLine();
+
         } catch (IOException e) {
             System.out.println("Terjadi kesalahan saat menyimpan data: " + e.getMessage());
         }
@@ -427,14 +441,25 @@ class LaporanPenjualan {
 
     public void printLaporan() {
         System.out.println("Laporan Penjualan:");
-        int totalHarga = 0;
-        for (int i = 0; i < data.size(); i++) {
-            TransaksiPenjualan penjualan = data.get(i);
-            System.out.println("Transaksi Penjualan ke-" + (i + 1) + ": ");
-            penjualan.print();
-            totalHarga += penjualan.getTotalHarga();
+        
+        int totalSeluruhTransaksi = 0;
+        
+        try (BufferedReader reader = new BufferedReader(new FileReader("laporanpenjualan.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+                String[] parts = line.split(", ");
+                for (String part : parts) {
+                    if (part.startsWith("Total Harga:")) {
+                        String totalStr = part.split(": ")[1];
+                        totalSeluruhTransaksi += Integer.parseInt(totalStr);
+                    }
+                }
+            }
+            System.out.println("Total dari seluruh transaksi: " + totalSeluruhTransaksi);
+        } catch (IOException e) {
+            System.out.println("Terjadi kesalahan saat memuat data produk: " + e.getMessage());
         }
-        // System.out.println("Total Harga: " + totalHarga);
     }
 }
 
