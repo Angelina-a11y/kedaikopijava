@@ -10,7 +10,6 @@ import java.util.List;
 // datahandler
 abstract class Datahandler {
     public abstract void create_data();
-
     public abstract void view();
 }
 
@@ -58,13 +57,13 @@ class Pegawai extends Datahandler {
 
     // menampilkan data dari pegawai.txt
     public void view() {
+        System.out.println("Data saat ini: ");
         data.clear();
         try (BufferedReader reader = new BufferedReader(new FileReader("pegawai.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] loadeddata = line.split(", ");
                 data.add(loadeddata);
-                System.out.println("Data saat ini: ");
             }
             for (int i = 0; i < data.size(); i++) {
                 String[] datum = data.get(i);

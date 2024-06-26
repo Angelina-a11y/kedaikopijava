@@ -12,3 +12,6 @@ Nama Pembeli: koki, Tanggal: 6, Total Harga: 30000
 Nama Produk: espresso, Harga: 10000, Jumlah: 2, Subtotal: 20000
 Nama Produk: americano, Harga: 10000, Jumlah: 1, Subtotal: 10000
 ------
+Nama Pembeli: ptr, Tanggal: 20 Jun 2302, Total Harga: 20000
+Nama Produk: americano, Harga: 10000, Jumlah: 2, Subtotal: 20000
+------
