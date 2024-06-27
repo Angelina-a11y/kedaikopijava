@@ -15,3 +15,6 @@ Nama Produk: americano, Harga: 10000, Jumlah: 1, Subtotal: 10000
 Nama Pembeli: richard, Tanggal: 27, Total Harga: 10000
 Nama Produk: americano, Harga: 10000, Jumlah: 1, Subtotal: 10000
 ------
+Nama Pembeli: krisna, Tanggal: 27, Total Harga: 20000
+Nama Produk: espresso, Harga: 10000, Jumlah: 2, Subtotal: 20000
+------

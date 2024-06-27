@@ -239,7 +239,10 @@ class Stok extends Datahandler {
             System.out.println("Terjadi kesalahan saat memuat data produk: " + e.getMessage());
         }
     }
-
+        // Method untuk mendapatkan data produk dari stok
+        public List<String[]> getProdukData() { // Perubahan: method baru untuk mendapatkan data produk
+            return this.produkData;
+        }
 }
 
 // transaksi penjualan menampung seluruh penjualan
@@ -290,113 +293,133 @@ class TransaksiPenjualan {
         System.out.println("Total Harga: " + totalHarga);
     }
 }
-// penjualan
-// penjualan extends datahandler agar bisa menggunakan method create_data dan
-// view dari datahandler
-class Penjualan extends Datahandler {
-    private List<TransaksiPenjualan> data;
-    private List<String[]> produkData;
 
-    public Penjualan(List<String[]> produkData) {
+// penjualan
+class Penjualan extends Datahandler {
+    private List<TransaksiPenjualan> data; // List untuk menyimpan data transaksi penjualan
+    private Stok stok; // Referensi ke kelas Stok
+
+    public Penjualan(Stok stok) { // Perubahan: konstruktor menerima objek Stok
         this.data = new ArrayList<>();
-        this.produkData = produkData;
+        this.stok = stok;
     }
 
     Scanner penjualan = new Scanner(System.in);
 
+    // Method untuk membuat data penjualan
     public void create_data() {
-        List<String[]> items = new ArrayList<>();
-        String lanjut = "y";
-        int totalHarga = 0;
+        List<String[]> items = new ArrayList<>(); // List untuk menyimpan item yang dibeli dalam transaksi
+        String lanjut = "y"; // Variabel untuk mengontrol loop penambahan produk
+        int totalHarga = 0; // Variabel untuk menyimpan total harga transaksi
 
+        // Membaca nama pembeli dari input pengguna
         System.out.print("Masukkan Nama Pembeli: ");
         String namaPembeli = penjualan.nextLine();
 
+        // Loop untuk menambahkan produk ke dalam transaksi
         do {
+            // Mendapatkan data produk dari kelas Stok
+            List<String[]> produkData = stok.getProdukData(); // Perubahan: mengambil data produk dari objek Stok
+
+            // Menampilkan daftar produk yang tersedia
             System.out.println("Pilih Produk untuk Dijual: ");
             for (int i = 0; i < produkData.size(); i++) {
                 String[] produk = produkData.get(i);
                 System.out.println((i + 1) + ". " + produk[0] + " - " + produk[1]);
             }
 
+            // Membaca pilihan produk dari input pengguna
             System.out.print("Masukkan Nomor Produk: ");
             int produkChoice = penjualan.nextInt();
-            penjualan.nextLine(); // clear newline from buffer
+            penjualan.nextLine(); // Membersihkan newline dari buffer
 
+            // Validasi pilihan produk
             if (produkChoice < 1 || produkChoice > produkData.size()) {
                 System.out.println("Pilihan produk tidak valid.");
                 continue;
             }
 
+            // Mengambil detail produk yang dipilih
             String[] selectedProduk = produkData.get(produkChoice - 1);
             String namaProduk = selectedProduk[0];
             int hargaProduk = Integer.parseInt(selectedProduk[1]);
 
+            // Membaca jumlah produk dari input pengguna
             System.out.print("Masukkan Jumlah: ");
             String jumlah = penjualan.nextLine();
             int qty = Integer.parseInt(jumlah);
 
+            // Menghitung subtotal harga produk
             int subtotal = hargaProduk * qty;
-            totalHarga += subtotal;
+            totalHarga += subtotal; // Menambahkan subtotal ke total harga
 
+            // Menyimpan detail item yang dibeli dalam array
             String[] item = { namaPembeli, namaProduk, String.valueOf(hargaProduk), jumlah, String.valueOf(subtotal), "" };
-            items.add(item);
+            items.add(item); // Menambahkan item ke list items
 
+            // Menanyakan apakah pengguna ingin menambahkan produk lagi
             System.out.print("Apakah ingin menambah produk lagi? (y/n): ");
             lanjut = penjualan.nextLine();
-        } while (lanjut.equalsIgnoreCase("y"));
+        } while (lanjut.equalsIgnoreCase("y")); // Loop berlanjut jika pengguna memilih 'y'
 
+        // Membaca tanggal transaksi dari input pengguna
         System.out.print("Masukkan Tanggal: ");
         String tanggal = penjualan.nextLine();
 
+        // Menerapkan diskon jika total harga lebih dari 100000
         if (totalHarga > 100000) {
             int diskon = (int) (totalHarga * 0.05);
             totalHarga -= diskon;
             System.out.println("Diskon sebesar 5% diterapkan: " + diskon);
         }
 
+        // Menyimpan detail transaksi dan menambahkannya ke list data
         for (String[] item : items) {
             item[5] = tanggal;
             TransaksiPenjualan transaksi = new TransaksiPenjualan(items, namaPembeli, tanggal, totalHarga);
             data.add(transaksi);
-            save(transaksi);
+            save(transaksi); // Menyimpan transaksi ke file
         }
 
         System.out.println("Transaksi penjualan telah ditambahkan.");
     }
 
+    // Method untuk menyimpan transaksi ke file
     private void save(TransaksiPenjualan transaksi) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("penjualan.txt", true));
+             BufferedWriter writerLaporan = new BufferedWriter(new FileWriter("laporanpenjualan.txt", true))) {
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("penjualan.txt", true));BufferedWriter writerLaporan = new BufferedWriter(new FileWriter("laporanpenjualan.txt", true))) {
-
-        // Write to penjualan.txt
-        writer.write("Nama Pembeli: " + transaksi.getNamaPembeli() + ", Tanggal: " + transaksi.getTanggal() + ", Total Harga: " + transaksi.getTotalHarga());
-        writer.newLine();
-        for (String[] item : transaksi.getItems()) {
-            writer.write("Nama Produk: " + item[1] + ", Harga: " + item[2] + ", Jumlah: " + item[3] + ", Subtotal: " + item[4]);
+            // Menulis detail transaksi ke penjualan.txt
+            writer.write("Nama Pembeli: " + transaksi.getNamaPembeli() + ", Tanggal: " + transaksi.getTanggal() + ", Total Harga: " + transaksi.getTotalHarga());
             writer.newLine();
-        }
-        writer.write("------");
-        writer.newLine();
+            for (String[] item : transaksi.getItems()) {
+                writer.write("Nama Produk: " + item[1] + ", Harga: " + item[2] + ", Jumlah: " + item[3] + ", Subtotal: " + item[4]);
+                writer.newLine();
+            }
+            writer.write("------");
+            writer.newLine();
 
-        // Write to laporanpenjualan.txt
-        writerLaporan.write("Nama Pembeli: " + transaksi.getNamaPembeli() + ", Tanggal: " + transaksi.getTanggal() + ", Total Harga: " + transaksi.getTotalHarga());
-        writerLaporan.newLine();
-        for (String[] item : transaksi.getItems()) {
-            writerLaporan.write("Nama Produk: " + item[1] + ", Harga: " + item[2] + ", Jumlah: " + item[3] + ", Subtotal: " + item[4]);
+            // Menulis detail transaksi ke laporanpenjualan.txt
+            writerLaporan.write("Nama Pembeli: " + transaksi.getNamaPembeli() + ", Tanggal: " + transaksi.getTanggal() + ", Total Harga: " + transaksi.getTotalHarga());
             writerLaporan.newLine();
-        }
-        writerLaporan.write("------");
-        writerLaporan.newLine();
+            for (String[] item : transaksi.getItems()) {
+                writerLaporan.write("Nama Produk: " + item[1] + ", Harga: " + item[2] + ", Jumlah: " + item[3] + ", Subtotal: " + item[4]);
+                writerLaporan.newLine();
+            }
+            writerLaporan.write("------");
+            writerLaporan.newLine();
 
         } catch (IOException e) {
             System.out.println("Terjadi kesalahan saat menyimpan data: " + e.getMessage());
         }
     }
 
+    // Method untuk menampilkan data penjualan dari penjualan.txt
     public void view() {
         System.out.println("Data penjualan saat ini: ");
-        int totalSeluruhTransaksi = 0;
+        int totalSeluruhTransaksi = 0; // Variabel untuk menyimpan total seluruh transaksi
+
+        // Membaca dan menampilkan data dari file
         try (BufferedReader reader = new BufferedReader(new FileReader("penjualan.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -406,7 +429,7 @@ class Penjualan extends Datahandler {
                     for (String part : parts) {
                         if (part.startsWith("Total Harga:")) {
                             String totalStr = part.split(": ")[1];
-                            totalSeluruhTransaksi += Integer.parseInt(totalStr);
+                            totalSeluruhTransaksi += Integer.parseInt(totalStr); // Menambahkan total harga ke total seluruh transaksi
                         }
                     }
                 }
@@ -418,8 +441,7 @@ class Penjualan extends Datahandler {
         }
     }
 
-    
-        // Method getData()
+    // Method untuk mengambil data transaksi
     public List<TransaksiPenjualan> getData() {
         return this.data;
     }
@@ -470,7 +492,7 @@ public class App {
         // stok
         Stok stok = new Stok(produk.getData());
 
-        Penjualan penjualan = new Penjualan(produk.getData());
+        Penjualan penjualan = new Penjualan(stok);
 
         Scanner input = new Scanner(System.in);
         int choice;
